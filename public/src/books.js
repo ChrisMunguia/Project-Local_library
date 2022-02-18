@@ -13,14 +13,15 @@ function partitionBooksByBorrowedStatus(books) {
 }
 
 function getBorrowersForBook({ borrows }, accounts) {
-	return accounts
-		.reduce((acc, account) => {
-			borrows.forEach((borrow) => {
-				account.id === borrow.id ? acc.push({ ...account, returned: borrow.returned }) : null;
-			});
-			return acc;
-		}, [])
-		.slice(0, 10);
+	const borrowerAccounts = accounts.reduce((acc, account) => {
+		borrows.forEach((borrow) => {
+			const borrowers = { ...account, returned: borrow.returned };
+			account.id === borrow.id ? acc.push(borrowers) : null;
+		});
+		return acc;
+	}, []);
+
+	return borrowerAccounts.slice(0, 10);
 }
 
 module.exports = {
